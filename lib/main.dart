@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:stage_assignment/services/env/env_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EnvService.initialize();
   runApp(const MyApp());
 }
 
