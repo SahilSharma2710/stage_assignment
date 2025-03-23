@@ -1,16 +1,65 @@
-# stage_assignment
+# Stage Assignment - Movies App
 
-A new Flutter project.
+A Flutter application for browsing and managing a collection of movies.
+
+## Demo 
+
+[Watch the demo video](./assets/demo/app-demo.mp4)
+
+## Features
+
+- Browse a grid of movies from an API
+- Search functionality to filter movies by title
+- Toggle between viewing all movies or just favorites
+- Add/remove movies from favorites
+- Offline mode to view favorite movies without internet connection
+- Detailed movie information screen
+- Pull to refresh for latest data
+
+## Architecture
+
+This project follows clean architecture principles with:
+- BLoC pattern for state management
+- Repository pattern for data access
+- API integration with error handling
+- Offline data persistence
+
+## Technologies
+
+- Flutter & Dart
+- BLoC for state management
+- Connectivity handling
+- RESTful API integration
+- Local storage
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
 
-A few resources to get you started if this is your first Flutter project:
+- Flutter SDK (2.0 or higher)
+- Dart SDK
+- Android Studio or VS Code with Flutter extensions
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Installation
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/stage_assignment.git
+   ```
+
+2. Navigate to the project directory:
+   ```
+   cd stage_assignment
+   ```
+
+3. Install dependencies:
+   ```
+   flutter pub get
+   ```
+
+4. Run the app:
+   ```
+   flutter run
+   ```
+
+## Project Structure
