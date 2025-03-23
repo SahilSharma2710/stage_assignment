@@ -1,4 +1,5 @@
 import 'package:stage_assignment/models/movie_data_model.dart';
+import 'package:stage_assignment/models/movie_details_model.dart';
 
 import '../http/http_service.dart';
 import '../env/env_service.dart';
@@ -28,7 +29,6 @@ class MovieApiService {
       );
 
       final List<dynamic> results = response['results'] ?? [];
-      print(results);
       return results
           .map((movieJson) => MovieDataModel.fromJson(movieJson))
           .toList();
@@ -62,14 +62,14 @@ class MovieApiService {
   }
 
   // Get movie details by ID
-  Future<MovieDataModel> getMovieDetails(int movieId) async {
+  Future<MovieDetails> getMovieDetails(int movieId) async {
     try {
       final response = await _httpService.get(
         '/movie/$movieId',
         headers: _authHeader,
       );
 
-      return MovieDataModel.fromJson(response);
+      return MovieDetails.fromJson(response);
     } catch (e) {
       throw Exception('Failed to fetch movie details: $e');
     }
