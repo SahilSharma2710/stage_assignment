@@ -21,8 +21,16 @@ class MockMovieApiService extends Mock implements MovieApiService {}
 
 class MockConnectivityBloc extends Mock implements ConnectivityBloc {}
 
+// Fake classes for event fallback values
+class FakeConnectivityEvent extends Fake implements ConnectivityEvent {}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  // Register fallback values before all tests
+  setUpAll(() {
+    registerFallbackValue(FakeConnectivityEvent());
+  });
 
   late MockFavoritesService favoritesService;
   late MockMovieApiService movieApiService;
@@ -38,14 +46,11 @@ void main() {
     connectivityState =
         const ConnectivityState(status: ConnectionStatus.connected);
 
-    // Important: Mock the stream property that Bloc uses internally
+    // Mock the stream property
     when(() => connectivityBloc.stream)
         .thenAnswer((_) => Stream.fromIterable([connectivityState]));
 
-    // Mock the close method to return a completed future
     when(() => connectivityBloc.close()).thenAnswer((_) => Future.value());
-
-    // Mock the state getter
     when(() => connectivityBloc.state).thenReturn(connectivityState);
 
     // Set up mock responses
@@ -104,53 +109,40 @@ void main() {
   group('Movie App Integration Tests', () {
     testWidgets('App initializes correctly and shows movie list screen',
         (WidgetTester tester) async {
-      // Make sure the connectivity check is properly handled
+      // Mock the event addition
       when(() => connectivityBloc.add(any(that: isA<CheckConnectivity>())))
           .thenAnswer((_) {});
 
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      // Verify app title is displayed
       expect(find.text('Movies'), findsOneWidget);
-
-      // Verify we see movie items (since our mock returns 10 items)
       expect(find.byType(ListView), findsOneWidget);
     });
 
     testWidgets('Search functionality works', (WidgetTester tester) async {
-      // Make sure the connectivity check is properly handled
       when(() => connectivityBloc.add(any(that: isA<CheckConnectivity>())))
           .thenAnswer((_) {});
 
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      // Find the search field
-      expect(find.byType(TextField), findsOneWidget);
-
-      // Enter text in search field
       await tester.enterText(find.byType(TextField), 'Movie 1');
       await tester.pumpAndSettle();
 
-      // Verify search results
       expect(find.textContaining('Movie 1'), findsAtLeastNWidgets(1));
     });
 
     testWidgets('UI elements display correctly', (WidgetTester tester) async {
-      // Make sure the connectivity check is properly handled
       when(() => connectivityBloc.add(any(that: isA<CheckConnectivity>())))
           .thenAnswer((_) {});
 
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      // Check for basic UI elements
       expect(find.byType(AppBar), findsOneWidget);
-      expect(find.byType(TextField), findsOneWidget); // Search field
-      expect(find.byType(ListView), findsOneWidget); // Movie list
-
-      // You can add more specific UI checks here based on your implementation
+      expect(find.byType(TextField), findsOneWidget);
+      expect(find.byType(ListView), findsOneWidget);
     });
   });
 }

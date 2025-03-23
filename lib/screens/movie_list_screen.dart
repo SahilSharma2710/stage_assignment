@@ -20,6 +20,7 @@ class MoviesListScreen extends StatefulWidget {
 
 class _MoviesListScreenState extends State<MoviesListScreen> {
   final TextEditingController _searchController = TextEditingController();
+  bool _showOnlyFavorites = false;
 
   @override
   void initState() {
@@ -53,6 +54,35 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
+          actions: [
+            BlocBuilder<ConnectivityBloc, ConnectivityState>(
+              builder: (context, connectivityState) {
+                if (!connectivityState.isConnected) return const SizedBox();
+
+                return Row(
+                  children: [
+                    Text(
+                      _showOnlyFavorites ? 'Favorites' : 'All',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Switch(
+                      value: _showOnlyFavorites,
+                      onChanged: (value) {
+                        setState(() {
+                          _showOnlyFavorites = value;
+                        });
+                      },
+                      activeColor: Colors.red,
+                    ),
+                    const SizedBox(width: 10),
+                  ],
+                );
+              },
+            ),
+          ],
         ),
         body: BlocListener<ConnectivityBloc, ConnectivityState>(
           listener: (context, connectivityState) {
@@ -212,7 +242,16 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
                                 .read<MoviesListBloc>()
                                 .add(const FetchMoviesList()),
                           );
-                        } else if (state.movies.isEmpty) {
+                        } else if (_showOnlyFavorites &&
+                            state.favoriteMovies.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              'No favorite movies found',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          );
+                        } else if (!_showOnlyFavorites &&
+                            state.movies.isEmpty) {
                           return const Center(
                             child: Text(
                               'No movies found',
@@ -220,6 +259,10 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
                             ),
                           );
                         }
+
+                        final displayedMovies = _showOnlyFavorites
+                            ? state.favoriteMovies
+                            : state.movies;
 
                         return RefreshIndicator(
                           onRefresh: () async {
@@ -235,9 +278,9 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
                               crossAxisSpacing: 12,
                               mainAxisSpacing: 12,
                             ),
-                            itemCount: state.movies.length,
+                            itemCount: displayedMovies.length,
                             itemBuilder: (context, index) {
-                              final movie = state.movies[index];
+                              final movie = displayedMovies[index];
                               final isFavorite = state.favoriteMovies
                                   .any((fav) => fav.id == movie.id);
 
