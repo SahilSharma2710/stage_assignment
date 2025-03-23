@@ -6,6 +6,7 @@ import 'package:stage_assignment/bloc/connectivity/connectivity_state.dart';
 import 'package:stage_assignment/bloc/moviesList/movies_list_bloc.dart';
 import 'package:stage_assignment/bloc/moviesList/movies_list_event.dart';
 import 'package:stage_assignment/bloc/moviesList/movies_list_state.dart';
+import 'package:stage_assignment/screens/movie_details_screen.dart';
 import 'package:stage_assignment/widgets/movie_error_widget.dart';
 import 'package:stage_assignment/widgets/movie_loading_widget.dart';
 import 'package:stage_assignment/widgets/movie_grid_item.dart';
@@ -252,13 +253,15 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
                                       );
                                 },
                                 onTap: () async {
-                                  // await Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (_) =>
-                                  //         MovieDetailsScreen(movieId: movie.id),
-                                  //   ),
-                                  // );
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => MovieDetailScreen(
+                                        movie: movie,
+                                        isFavorite: isFavorite,
+                                      ),
+                                    ),
+                                  );
                                   // Refresh the list after returning from details
                                   context
                                       .read<MoviesListBloc>()

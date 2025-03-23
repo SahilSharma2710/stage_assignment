@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stage_assignment/bloc/connectivity/connectivity_bloc.dart';
 import 'package:stage_assignment/bloc/connectivity/connectivity_event.dart';
+import 'package:stage_assignment/bloc/movieDetails/movie_details_bloc.dart';
 import 'package:stage_assignment/bloc/moviesList/movies_list_bloc.dart';
 import 'package:stage_assignment/bloc/moviesList/movies_list_event.dart';
 import 'package:stage_assignment/screens/movie_list_screen.dart';
@@ -52,6 +53,12 @@ class MyApp extends StatelessWidget {
             movieApiService: movieApiService,
             favoritesService: favoritesService,
           )..add(const FetchMoviesList()),
+        ),
+        BlocProvider<MovieDetailsBloc>(
+          create: (context) => MovieDetailsBloc(
+            movieApiService: movieApiService,
+            favoritesService: favoritesService,
+          ),
         ),
       ],
       child: MaterialApp(
